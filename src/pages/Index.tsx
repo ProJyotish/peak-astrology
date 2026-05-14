@@ -570,7 +570,7 @@ function FinalCTA() {
           Find your <em className="not-italic text-gold">peak</em>.<br />Live by it.
         </motion.h2>
         <motion.div {...fade} transition={{ duration: 0.8, delay: 0.15 }} className="mt-12 flex justify-center">
-          <WaitlistForm source="footer" />
+          <WaitlistForm source="footer" variant="solid" />
         </motion.div>
         <p className="mt-10 font-mono text-[11px] uppercase tracking-[0.22em] text-clay">Built in India · For the world</p>
       </div>
