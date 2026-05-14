@@ -6,7 +6,12 @@ import { ArrowRight, Check } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import peakLogo from "@/assets/peak-logo.svg";
 
-const emailSchema = z.string().trim().email("Enter a valid email").max(255);
+const phoneSchema = z
+  .string()
+  .trim()
+  .min(7, "Enter a valid phone number")
+  .max(20, "Phone number is too long")
+  .regex(/^\+?[0-9 ()-]{7,20}$/, "Enter a valid phone number");
 
 const fade = {
   initial: { opacity: 0, y: 12 },
@@ -41,20 +46,20 @@ function Nav() {
   );
 }
 
-function WaitlistForm({ source = "landing", size = "lg" }: { source?: string; size?: "lg" | "sm" }) {
-  const [email, setEmail] = useState("");
+function WaitlistForm({ source = "landing", size = "lg", variant = "default" }: { source?: string; size?: "lg" | "sm"; variant?: "default" | "solid" }) {
+  const [phone, setPhone] = useState("");
   const [loading, setLoading] = useState(false);
   const [done, setDone] = useState(false);
 
   const submit = async (e: React.FormEvent) => {
     e.preventDefault();
-    const parsed = emailSchema.safeParse(email);
+    const parsed = phoneSchema.safeParse(phone);
     if (!parsed.success) {
       toast.error(parsed.error.issues[0].message);
       return;
     }
     setLoading(true);
-    const { error } = await supabase.from("waitlist").insert({ email: parsed.data, source });
+    const { error } = await supabase.from("waitlist").insert({ phone: parsed.data, source });
     setLoading(false);
     if (error) {
       if (error.code === "23505") {
@@ -62,7 +67,7 @@ function WaitlistForm({ source = "landing", size = "lg" }: { source?: string; si
         toast.success("You're already on the list.");
         return;
       }
-      toast.error("Could not join waitlist. Please try again.");
+      toast.error("Could not request access. Please try again.");
       return;
     }
     setDone(true);
@@ -80,14 +85,42 @@ function WaitlistForm({ source = "landing", size = "lg" }: { source?: string; si
     );
   }
 
+  if (variant === "solid") {
+    return (
+      <form onSubmit={submit} className="flex w-full max-w-md flex-col sm:flex-row items-stretch gap-3">
+        <input
+          type="tel"
+          required
+          inputMode="tel"
+          autoComplete="tel"
+          value={phone}
+          onChange={(e) => setPhone(e.target.value)}
+          placeholder="+91 98765 43210"
+          className={`flex-1 rounded-sm border border-ink/20 bg-parchment px-4 outline-none placeholder:text-clay/60 text-ink focus:border-gold transition-colors ${size === "lg" ? "py-4 text-base" : "py-3 text-sm"}`}
+          disabled={loading}
+        />
+        <button
+          type="submit"
+          disabled={loading}
+          className={`group inline-flex items-center justify-center gap-2 rounded-sm bg-ink px-6 font-mono text-xs uppercase tracking-[0.2em] text-parchment shadow-[0_10px_30px_-12px_hsl(24_15%_9%_/_0.5)] hover:bg-gold hover:text-ink disabled:opacity-50 transition-colors ${size === "lg" ? "py-4" : "py-3"}`}
+        >
+          {loading ? "Sending" : "Request access"}
+          <ArrowRight className="h-3.5 w-3.5 transition-transform group-hover:translate-x-0.5" />
+        </button>
+      </form>
+    );
+  }
+
   return (
     <form onSubmit={submit} className={`flex w-full max-w-md items-stretch border-b ${loading ? "border-gold" : "border-ink/40"} focus-within:border-gold transition-colors`}>
       <input
-        type="email"
+        type="tel"
         required
-        value={email}
-        onChange={(e) => setEmail(e.target.value)}
-        placeholder="your@email.com"
+        inputMode="tel"
+        autoComplete="tel"
+        value={phone}
+        onChange={(e) => setPhone(e.target.value)}
+        placeholder="+91 98765 43210"
         className={`flex-1 bg-transparent outline-none placeholder:text-clay/60 text-ink ${size === "lg" ? "py-4 text-base" : "py-3 text-sm"}`}
         disabled={loading}
       />
@@ -168,7 +201,7 @@ function Hero() {
             Hour-by-hour guidance. Long-term pattern mapping. Goal-bound coaching, grounded in astrological timing — not mysticism. For people who live by calendars.
           </motion.p>
           <motion.div {...fade} transition={{ duration: 0.8, delay: 0.25 }} className="mt-10" id="waitlist">
-            <WaitlistForm source="hero" />
+            <WaitlistForm source="hero" variant="solid" />
             <p className="mt-3 font-mono text-[11px] uppercase tracking-[0.18em] text-clay">Early access · iOS &amp; Android · Coming soon</p>
           </motion.div>
         </div>
@@ -537,7 +570,7 @@ function FinalCTA() {
           Find your <em className="not-italic text-gold">peak</em>.<br />Live by it.
         </motion.h2>
         <motion.div {...fade} transition={{ duration: 0.8, delay: 0.15 }} className="mt-12 flex justify-center">
-          <WaitlistForm source="footer" />
+          <WaitlistForm source="footer" variant="solid" />
         </motion.div>
         <p className="mt-10 font-mono text-[11px] uppercase tracking-[0.22em] text-clay">Built in India · For the world</p>
       </div>
