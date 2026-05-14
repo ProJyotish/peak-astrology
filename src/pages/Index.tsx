@@ -36,7 +36,6 @@ function Nav() {
         <Wordmark />
         <nav className="flex items-center gap-8">
           <a href="#what" className="hidden md:inline text-sm text-clay hover:text-ink transition-colors">What it does</a>
-          <a href="#founder" className="hidden md:inline text-sm text-clay hover:text-ink transition-colors">Founder</a>
           <a href="#waitlist" className="font-mono text-xs uppercase tracking-[0.18em] text-ink border-b border-gold pb-0.5 hover:text-gold transition-colors">
             Join waitlist
           </a>
@@ -585,8 +584,7 @@ function Footer() {
         <Wordmark />
         <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-clay">© Peak {new Date().getFullYear()} · All rights reserved</p>
         <div className="flex gap-6 font-mono text-[10px] uppercase tracking-[0.18em] text-clay">
-          <a href="#" className="hover:text-ink transition-colors">Privacy</a>
-          <a href="mailto:hello@peak.app" className="hover:text-ink transition-colors">Contact</a>
+          <a href="mailto:contact@peaklife.me" className="hover:text-ink transition-colors">Contact</a>
         </div>
       </div>
     </footer>
