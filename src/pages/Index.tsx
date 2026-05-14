@@ -201,7 +201,7 @@ function Hero() {
             Hour-by-hour guidance. Long-term pattern mapping. Goal-bound coaching, grounded in astrological timing — not mysticism. For people who live by calendars.
           </motion.p>
           <motion.div {...fade} transition={{ duration: 0.8, delay: 0.25 }} className="mt-10" id="waitlist">
-            <WaitlistForm source="hero" />
+            <WaitlistForm source="hero" variant="solid" />
             <p className="mt-3 font-mono text-[11px] uppercase tracking-[0.18em] text-clay">Early access · iOS &amp; Android · Coming soon</p>
           </motion.div>
         </div>
