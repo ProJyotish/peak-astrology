@@ -6,7 +6,12 @@ import { ArrowRight, Check } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import peakLogo from "@/assets/peak-logo.svg";
 
-const emailSchema = z.string().trim().email("Enter a valid email").max(255);
+const phoneSchema = z
+  .string()
+  .trim()
+  .min(7, "Enter a valid phone number")
+  .max(20, "Phone number is too long")
+  .regex(/^\+?[0-9 ()-]{7,20}$/, "Enter a valid phone number");
 
 const fade = {
   initial: { opacity: 0, y: 12 },
